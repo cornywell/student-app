@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %} Students {% endblock %}
+
+{% block content %}
+
+<!-- TODO: correct styling so alignment stays the same on changes -->
+<div class="container">
+  <h3>Student Information</h3>
+
+  {% if not result %}
+  <p>Select a student to view their information</p>
+  {% endif %}
+
+
+  <div class="col-4">
+    <table class="table table-sm table-borderless">
+      <tbody>
+        <tr>
+          <th scope="row">Student ID:</th>
+          <td>
+            {% if result %}
+            {{ result.id }}
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Fullname:</th>
+          <td>
+            {% if result %}
+            {{ result.firstname }} {{ result.lastname }}
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Age:</th>
+          <td>
+            {% if result %}
+            {{ result.age }}
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Average Grade:</th>
+          <td>
+            {% if result %}
+            {{ result.avg_grade }}
+            {% endif %}
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+
+
+  <div>
+    <h3>Students</h3>
+    <div class="text-end">
+      <div class="row g-3 align-items-center">
+        <div class="col-auto">
+          <label for="inputSearch" class="col-form-label">Search</label>
+        </div>
+        <div class="col-auto">
+          <input type="text" id="inputSearch" class="form-control" placeholder="Enter name">
+        </div>
+      </div>
+    </div>
+
+
+    <table class="table table-hover" id="student_table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Name</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fullname in fullnames %}
+        <tr>
+          <th scope="row">{{ fullname.id }}</th>
+          <td>{{ fullname.firstname }} {{ fullname.lastname }}</td>
+          <input type="hidden" id="id" name="id" value="{{ fullname.id }}">
+          <td>
+            <form action="/" method="post">
+              <input type="hidden" name="id" value="{{ fullname.id }}">
+              <button type="submit" class="btn btn-primary">Result</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // TODO: Move this out to static/js
+  function filterTable(event) {
+    var filter = event.target.value.toUpperCase();
+    var rows = document.querySelector("#student_table tbody").rows;
+
+    for (var i = 0; i < rows.length; i++) {
+      var firstCol = rows[i].cells[1].textContent.toUpperCase();
+      var secondCol = rows[i].cells[2].textContent.toUpperCase();
+      if (firstCol.indexOf(filter) > -1 || secondCol.indexOf(filter) > -1) {
+        rows[i].style.display = "";
+      } else {
+        rows[i].style.display = "none";
+      }
+    }
+  }
+
+  document.querySelector('#inputSearch').addEventListener('keyup', filterTable, false);
+</script>
+
+{% endblock %}

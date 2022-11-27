@@ -36,4 +36,4 @@ def Index():
     return render_template("index.html", fullnames=students_id_and_fullname, result=student_result)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0')

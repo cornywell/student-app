@@ -31,3 +31,4 @@ quit:
 ```
 
 Forgive me for the structure of the application and the lack of testing.
+Also, should change form post method to get.

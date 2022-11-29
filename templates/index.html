@@ -86,17 +86,25 @@
           <div class="modal-body">
 
 
+            {% if form %}
             <form action="{{ url_for('create') }}" method="POST">
-              <label for="firstname">First name:</label><br>
-              <input type="text" id="firstname" name="firstname"><br>
-              <label for="lastname">Last name:</label><br>
-              <input type="text" id="lastname" name="lastname"><br>
-              <label for="age">Age:</label><br>
-              <input type="number" id="age" name="age"><br>
-              <label for="avg_grade">Average grade:</label><br>
-              <input type="number" id="avg_grade" name="avg_grade" min="0" max="100" step="0.1"><br><br>
-              <input type="submit" value="Submit">
+              {{ form.csrf_token }}
+              {{ form.firstname.label }} {{ form.firstname(size=20) }}<br>
+              {{ form.lastname.label }} {{ form.lastname(size=20) }}<br>
+              {{ form.age.label }} {{ form.age(size=20) }}<br>
+              {{ form.avg_grade.label }} {{ form.avg_grade(size=20) }}<br>
+              <input type="submit" value="Go">
             </form>
+
+            <!-- This needs work -->
+            {% if form.firstname.errors %}
+            <ul class="errors">
+              {% for error in form.firstname.errors %}
+              <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+            {% endif %}
 
 
           </div>

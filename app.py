@@ -5,6 +5,7 @@ from flask_bootstrap import Bootstrap
 from werkzeug.exceptions import NotFound
 from sqlalchemy.sql import func
 from models import db, Student, get_avg_all_students
+from forms import StudentForm
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -12,7 +13,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] =\
         'sqlite:///' + os.path.join(basedir, 'database.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+app.config['SECRET_KEY'] = "SUPER_SECRET_KEY"
 db.init_app(app)
 
 
@@ -22,19 +23,20 @@ def index():
     if request.args.get("id"):
         student_result = Student.query.get_or_404(request.args.get("id"))
     students_id_and_fullname = Student.query.with_entities(Student.id, Student.firstname, Student.lastname)
-    return render_template("index.html", fullnames=students_id_and_fullname, result=student_result, avg=get_avg_all_students())
+    return render_template("index.html", fullnames=students_id_and_fullname, result=student_result, avg=get_avg_all_students(), form=StudentForm())
 
 
 @app.route('/create/', methods=['POST'])
 def create():
-    firstname = request.form['firstname']
-    lastname = request.form['lastname']
-    age = int(request.form['age'])
-    avg_grade = request.form['avg_grade']
-    student = Student(firstname=firstname, lastname=lastname, age=age, avg_grade=avg_grade)
-    db.session.add(student)
-    db.session.commit()
-
+    form = StudentForm()
+    firstname = form.firstname.data
+    lastname = form.lastname.data
+    age = form.age.data
+    avg_grade = form.avg_grade.data
+    if form.validate_on_submit():
+        student = Student(firstname=firstname, lastname=lastname, age=age, avg_grade=avg_grade)
+        db.session.add(student)
+        db.session.commit()
     return redirect(url_for('index'))
 
 

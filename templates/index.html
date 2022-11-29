@@ -84,7 +84,7 @@
           <td>{{ fullname.firstname }} {{ fullname.lastname }}</td>
           <input type="hidden" id="id" name="id" value="{{ fullname.id }}">
           <td>
-            <form action="/" method="post">
+            <form action="/" method="get">
               <input type="hidden" name="id" value="{{ fullname.id }}">
               <button type="submit" class="btn btn-primary">Result</button>
             </form>

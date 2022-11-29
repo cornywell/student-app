@@ -29,11 +29,12 @@ def index():
 @app.route('/create/', methods=['POST'])
 def create():
     form = StudentForm()
-    firstname = form.firstname.data
-    lastname = form.lastname.data
-    age = form.age.data
-    avg_grade = form.avg_grade.data
     if form.validate_on_submit():
+        firstname = form.firstname.data
+        lastname = form.lastname.data
+        age = form.age.data
+        avg_grade = form.avg_grade.data
+    
         student = Student(firstname=firstname, lastname=lastname, age=age, avg_grade=avg_grade)
         db.session.add(student)
         db.session.commit()

@@ -20,9 +20,7 @@ db.init_app(app)
 def Index():
     student_result = None
     if request.args.get("id"):
-        student_result = Student.query.get(request.args.get("id"))
-        if student_result == None:
-            return NotFound(request)
+        student_result = Student.query.get_or_404(request.args.get("id"))
 
     students_id_and_fullname = Student.query.with_entities(Student.id, Student.firstname, Student.lastname)
     return render_template("index.html", fullnames=students_id_and_fullname, result=student_result)

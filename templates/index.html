@@ -6,7 +6,7 @@
 
 <!-- TODO: correct styling so alignment stays the same on changes -->
 <div class="container">
-  <h1>Average grade for all students is {{ avg_avgs }}</h1>
+  <h1>Average grade for all students is {{ avg | round(2, 'common') }}</h1>
   <h3>Student Information</h3>
 
   {% if not result %}

@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from werkzeug.exceptions import NotFound
 from sqlalchemy.sql import func
-from models import db, Student
+from models import db, Student, get_avg_all_students
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -18,16 +18,11 @@ db.init_app(app)
 
 @app.route('/', methods=['GET'])
 def index():
-
-    sum_of_avg_grades = db.session.query(func.sum(Student.avg_grade).label("total_avg_grade")).all()[0][0] # strange indexing to unpack SA query
-    num_students = db.session.query(Student).count()
-    avg_all_students_avgs = sum_of_avg_grades / num_students
-
     student_result = None
     if request.args.get("id"):
         student_result = Student.query.get_or_404(request.args.get("id"))
     students_id_and_fullname = Student.query.with_entities(Student.id, Student.firstname, Student.lastname)
-    return render_template("index.html", fullnames=students_id_and_fullname, result=student_result, avg_avgs=avg_all_students_avgs)
+    return render_template("index.html", fullnames=students_id_and_fullname, result=student_result, avg=get_avg_all_students())
 
 
 @app.route('/create/', methods=['POST'])
